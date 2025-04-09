@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Intrusos - Banda de Garage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700&display=swap');
+
+        :root {
+            --rosa-neon: #FF1493;
+            --verde-lima: #ADFF2F;
+            --amarillo: #FFFF00;
+            --rojo: #FF0000;
+            --negro: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--negro);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'><circle cx='8' cy='8' r='7' fill='%23ADFF2F' stroke='%23000000' stroke-width='1'/></svg>") 16 16, auto;
+        }
+
+        .glitch-container {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .glitch-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.98),
+                rgba(0, 0, 0, 0.98) 10px,
+                rgba(20, 20, 20, 0.98) 10px,
+                rgba(20, 20, 20, 0.98) 20px
+            );
+            z-index: -1;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.2;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 150px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); filter: drop-shadow(0 0 0px var(--rosa-neon)); }
+            to { transform: scale(1.05); filter: drop-shadow(0 0 15px var(--rosa-neon)); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--verde-lima);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        nav a:hover {
+            color: var(--amarillo);
+            border-color: var(--rosa-neon);
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 20, 147, 0.2);
+            transition: all 0.3s;
+            z-index: -1;
+        }
+
+        nav a:hover::before {
+            left: 0;
+        }
+
+        .hero {
+            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-title {
+            font-family: 'Creepster', cursive;
+            font-size: 6rem;
+            color: var(--rosa-neon);
+            text-shadow: 0 0 20px var(--rosa-neon), 0 0 40px rgba(255, 20, 147, 0.5);
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            transform: rotate(-2deg);
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--verde-lima);
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .cta-button {
+            background-color: var(--rosa-neon);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform: skew(-5deg);
+            box-shadow: 5px 5px 0 var(--verde-lima);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background-color: var(--verde-lima);
+            box-shadow: 5px 5px 0 var(--rosa-neon);
+            transform: skew(-5deg) scale(1.05);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .monster {
+            position: absolute;
+            bottom: -20px;
+            right: 150px;
+            width: 180px;
+            transform: rotate(15deg);
+            animation: float 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0) rotate(15deg); }
+            to { transform: translateY(-20px) rotate(20deg); }
+        }
+
+        .knife {
+            position: absolute;
+            top: 100px;
+            left: 200px;
+            width: 100px;
+            transform: rotate(-30deg);
+            animation: slash 6s ease-in-out infinite;
+        }
+
+        @keyframes slash {
+            0% { transform: translateX(0) translateY(0) rotate(-30deg); }
+            50% { transform: translateX(30px) translateY(20px) rotate(-25deg); }
+            100% { transform: translateX(0) translateY(0) rotate(-30deg); }
+        }
+
+        .section {
+            padding: 100px 50px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Creepster', cursive;
+            font-size: 3.5rem;
+            color: var(--rosa-neon);
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px var(--rosa-neon);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--verde-lima);
+            box-shadow: 0 0 10px var(--verde-lima);
+        }
+
+        .bio-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .bio-text {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-left: 5px solid var(--verde-lima);
+            padding: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .bio-img {
+            flex: 1;
+            position: relative;
+        }
+
+        .band-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            object-position: center;
+            filter: grayscale(0%);
+            border: 3px solid var(--rosa-neon);
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+        }
+
+        .shows {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .show-card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--verde-lima);
+            padding: 20px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .show-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--rosa-neon);
+            box-shadow: 0 10px 20px rgba(255, 20, 147, 0.3);
+        }
+
+        .show-date {
+            font-family: 'Creepster', cursive;
+            font-size: 1.8rem;
+            color: var(--amarillo);
+            margin-bottom: 10px;
+        }
+
+        .show-venue {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .show-city {
+            font-size: 1.1rem;
+            color: var(--verde-lima);
+            margin-bottom: 15px;
+        }
+
+        .show-link {
+            display: inline-block;
+            background-color: var(--rosa-neon);
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .show-link:hover {
+            background-color: var(--verde-lima);
+            color: black;
+        }
+
+        .music-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .album {
+            margin-bottom: 80px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .album-cover {
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+            position: relative;
+            display: block;
+        }
+
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 3px solid var(--rosa-neon);
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+            transition: all 0.3s;
+        }
+
+        .album-cover:hover img {
+            transform: scale(1.05);
+        }
+
+        .album-title {
+            font-family: 'Creepster', cursive;
+            font-size: 2.5rem;
+            color: var(--verde-lima);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .album-year {
+            text-align: center;
+            color: var(--amarillo);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .player {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border: 2px solid var(--verde-lima);
+        }
+
+        .track {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .track:hover {
+            background-color: rgba(255, 20, 147, 0.1);
+        }
+
+        .track-number {
+            font-family: 'Creepster', cursive;
+            font-size: 1.5rem;
+            color: var(--rosa-neon);
+            margin-right: 20px;
+            min-width: 30px;
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .track-duration {
+            color: var(--amarillo);
+            font-size: 0.9rem;
+        }
+
+        .track-play {
+            background-color: transparent;
+            border: none;
+            color: var(--verde-lima);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .track-play:hover {
+            color: var(--rosa-neon);
+            transform: scale(1.2);
+        }
+        /* inicia gira*/
+        /* Estilos para la sección de próximas fechas */
+        .upcoming-dates {
+            margin-top: 30px;
+        }
+
+        .date-item {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--verde-lima);
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .date, .venue {
+            flex-grow: 1;
+        }
+
+        .view-flyer-btn {
+            background-color: var(--rosa-neon);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-flyer-btn:hover {
+            background-color: var(--verde-lima);
+            color: black;
+        }
+
+        .view-calendar-link {
+            display: inline-block;
+            background-color: #333;
+            color: var(--verde-lima);
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: 2px solid var(--verde-lima);
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .view-calendar-link:hover {
+            background-color: var(--verde-lima);
+            color: black;
+            border-color: var(--rosa-neon);
+        }
+
+        /* Estilos para la modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #111;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 3px solid var(--rosa-neon);
+            width: 80%; /* Could be more or less, depending on screen size */
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #flyer-image {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto 0;
+        }
+
+        #modal-event-name {
+            color: var(--amarillo);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .contact-form {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border: 2px solid var(--verde-lima);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(----verde-lima);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--rosa-neon);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-item {
+            margin-bottom: 30px;
+        }
+
+        .contact-title {
+            font-family: 'Creepster', cursive;
+            font-size: 1.8rem;
+            color: var(--rosa-neon);
+            margin-bottom: 10px;
+        }
+
+        .contact-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: var(--verde-lima);
+            color: black;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background-color: var(--rosa-neon);
+            transform: scale(1.1);
+        }
+
+        footer {
+            background-color: #111;
+            padding: 50px 0;
+            text-align: center;
+            border-top: 5px solid var(--rosa-neon);
+        }
+
+        .footer-logo {
+            width: 100px;
+            margin-bottom: 30px;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        .scrollToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--rosa-neon);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .scrollToTop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scrollToTop:hover {
+            background-color: var(--verde-lima);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 991px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .bio-content {
+                flex-direction: column;
+            }
+
+            .contact-container {
+                flex-direction: column;
+            }
+
+            .monster, .knife {
+                display: none;
+            }
+        }
+
+        @media (max-width: 767px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .section {
+                padding: 80px 20px;
+            }
+        }
+
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--verde-lima);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: 2px 0 var(--rosa-neon);
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="glitch-container">
+        <div class="glitch-bg"></div>
+
+        <header>
+            <img src="https://via.placeholder.com/150/150" alt="Los Intrusos Logo" class="logo" />
+            <nav>
+                <ul>
+                    <li><a href="#bio"><i class="fas fa-users"></i> Bio</a></li>
+                    <li><a href="#shows"><i class="fas fa-calendar-alt"></i> Shows</a></li>
+                    <li><a href="#music"><i class="fas fa-music"></i> Música</a></li>
+                    <li><a href="#contact"><i class="fas fa-envelope"></i> Contacto</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1 class="hero-title glitch" data-text="Los Intrusos">Los Intrusos</h1>
+            <p class="hero-subtitle">Invadiendo tu ciudad con puro garage rock desde las calles más oscuras</p>
+            <a href="#shows" class="cta-button">Próximos Shows</a>
+
+            <img src="https://via.placeholder.com/180/180" alt="Monstruo" class="monster" />
+            <img src="https://via.placeholder.com/100/100" alt="Cuchillo" class="knife" />
+        </section>
+    </div>
+
+    <section id="bio" class="section">
+        <h2 class="section-title">Quiénes Somos</h2>
+        <div class="bio-content">
+            <div class="bio-text">
+                <p>Los Intrusos surgieron de las profundidades del underground en 2020, cuando cuatro inadaptados decidieron que era hora de irrumpir en la escena musical con un sonido crudo y sin filtros.</p>
+                <p>Con influencias que van desde el garage rock clásico hasta el punk y el rock psicodélico, Los Intrusos han forjado un sonido propio que te golpea como un intruso en medio de la noche.</p>
+                <p>La banda está formada por El Ojo (voz/guitarra), La Garra (bajo), El Colmillo (batería) y La Navaja (guitarra/sintetizadores), cuatro almas descarriadas unidas por el amor al ruido y la actitud DIY.</p>
+                <p>Después de varios EP autoproducidos y conciertos caóticos que se han convertido en leyenda local, Los Intrusos están listos para llevar su invasión sonora a nuevos territorios.</p>
+            </div>
+            <div class="bio-img">
+                <img src="https://cdn.discordapp.com/attachments/1227003205511692288/1228000148633403412/jkmm7bh7qfsc1.png?ex=66074c4d&is=65f4d74d&hm=68c07a9b9cf3050ed4f76e53a9f5e5a8e8bcf8b35a4c4aaf45da35b67b7e72bd&" alt="Los Intrusos Banda" class="band-image" />
+            </div>
+        </div>
+    </section>
+
+    <section id="shows" class="section">
+        <h2 class="section-title">Próximas Invasiones</h2>
+        <div class="shows">
+            <div class="show-card">
+                <div class="show-date">15 / 04 / 2025</div>
+                <div class="show-venue">Garage Underground</div>
+                <div class="show-city">Ciudad de México, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+            <div class="show-card">
+                <div class="show-date">22 / 04 / 2025</div>
+                <div class="show-venue">El Sótano</div>
+                <div class="show-city">Guadalajara, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+            <div class="show-card">
+                <div class="show-date">29 / 04 / 2025</div>
+                <div class="show-venue">La Cueva</div>
+                <div class="show-city">Monterrey, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+            <div class="show-card">
+                <div class="show-date">05 / 05 / 2025</div>
+                <div class="show-venue">Zona Ruidosa</div>
+                <div class="show-city">Tijuana, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+            <div class="show-card">
+                <div class="show-date">12 / 05 / 2025</div>
+                <div class="show-venue">Club Detonación</div>
+                <div class="show-city">Puebla, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+            <div class="show-card">
+                <div class="show-date">20 / 05 / 2025</div>
+                <div class="show-venue">El Bunker</div>
+                <div class="show-city">Querétaro, MX</div>
+                <a href="#" class="show-link">Entradas</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="music" class="section">
+        <h2 class="section-title">Nuestra Música</h2>
+        <div class="music-container">
+            <div class="album">
+                <div class="album-cover">
+                    <img src="https://via.placeholder.com/300/300" alt="Álbum Invasión Nocturna" />
+                </div>
+                <h3 class="album-title">Invasión Nocturna</h3>
+                <div class="album-year">2024</div>
+                <p style="text-align: center;"><a href="#" style="color: var(--verde-lima); text-decoration: none;">Escuchar en plataformas</a></p>
+            </div>
+            </div>
+    </section>
+    <section id="dates" class="section">
+        <h2 class="section-title">Próximas Invasiones</h2>
+        <div class="upcoming-dates">
+            <div class="date-item" data-flyer="url_del_flyer_1.jpg" data-event-name="Invasión en Garage Underground">
+                <span class="date">15 / 04 / 2025</span> - <span class="venue">Garage Underground, Ciudad de México, MX</span> <button class="view-flyer-btn">Ver Flyer</button>
+            </div>
+            <div class="date-item" data-flyer="url_del_flyer_2.jpg" data-event-name="Noche de Ruido en El Sótano">
+                <span class="date">22 / 04 / 2025</span> - <span class="venue">El Sótano, Guadalajara, MX</span> <button class="view-flyer-btn">Ver Flyer</button>
+            </div>
+            <div class="date-item" data-flyer="url_del_flyer_3.jpg" data-event-name="Concierto en La Cueva">
+                <span class="date">29 / 04 / 2025</span> - <span class="venue">La Cueva, Monterrey, MX</span> <button class="view-flyer-btn">Ver Flyer</button>
+            </div>
+            <div class="date-item">
+                <a href="calendario.html" class="view-calendar-link">Ver Todas las Fechas</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="flyerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modal-event-name"></h3>
+            <img id="flyer-image" src="" alt="Flyer del Evento">
+        </div>
+    </div>
+    <section id="contact" class="section">
+        <h2 class="section-title">Contacto</h2>
+        <div class="contact-container">
+            <div class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" class="form-control" placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Tu email">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Asunto</label>
+                    <input type="text" id="subject" class="form-control" placeholder="Asunto">
+                </div>
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" class="form-control" placeholder="Tu mensaje"></textarea>
+                </div>
+                <button type="submit" class="cta-button">Enviar Mensaje</button>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3 class="contact-title">Booking</h3>
+                    <p class="contact-text">¿Quieres que Los Intrusos invadan tu venue? Contáctanos para fechas y disponibilidad enviando un correo a <a href="mailto:booking@losintrusos.com" style="color: var(--amarillo); text-decoration: none;">booking@losintrusos.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3 class="contact-title">Prensa</h3>
+                    <p class="contact-text">Para entrevistas, reseñas o cualquier consulta de prensa, escribe a <a href="mailto:prensa@losintrusos.com" style="color: var(--amarillo); text-decoration: none;">prensa@losintrusos.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h3 class="contact-title">Redes Sociales</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-spotify"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <img src="https://via.placeholder.com/100/100" alt="Los Intrusos Logo Footer" class="footer-logo" />
+        <p class="copyright">&copy; 2025 Los Intrusos. Todos los derechos reservados.</p>
+    </footer>
+
+    <div class="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Scroll to top button
+        const scrollToTopButton = document.querySelector('.scrollToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopButton.classList.add('visible');
+            } else {
+                scrollToTopButton.classList.remove('visible');
+            }
+        });
+
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Glitch effect on hero title
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            const originalText = heroTitle.textContent;
+            heroTitle.setAttribute('data-text', originalText);
+        }
+
+        // Random glitch effect on other elements (adjust selector as needed)
+        const glitchElements = document.querySelectorAll('h2.section-title, .cta-button, nav a');
+
+        function addRandomGlitch() {
+            const randomIndex = Math.floor(Math.random() * glitchElements.length);
+            const randomElement = glitchElements[randomIndex];
+            randomElement.classList.add('glitch');
+            randomElement.setAttribute('data-text', randomElement.textContent);
+
+            setTimeout(() => {
+                randomElement.classList.remove('glitch');
+                randomElement.removeAttribute('data-text');
+            }, 3000);
+        }
+
+        // Run glitch effect every 5-10 seconds
+        setInterval(() => {
+            if (Math.random() > 0.5) {
+                addRandomGlitch();
+            }
+        }, Math.random() * 5000 + 5000);
+
+        // ... (Tu código JavaScript anterior) ...
+
+        // Modal functionality
+        const flyerModal = document.getElementById('flyerModal');
+        const flyerImage = document.getElementById('flyer-image');
+        const modalEventName = document.getElementById('modal-event-name');
+        const closeButton = document.querySelector('.close-button');
+        const viewFlyerButtons = document.querySelectorAll('.view-flyer-btn');
+
+        viewFlyerButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const dateItem = this.parentNode;
+                const flyerSrc = dateItem.getAttribute('data-flyer');
+                const eventName = dateItem.getAttribute('data-event-name');
+                flyerImage.src = flyerSrc;
+                modalEventName.textContent = eventName;
+                flyerModal.style.display = "block";
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            flyerModal.style.display = "none";
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == flyerModal) {
+                flyerModal.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

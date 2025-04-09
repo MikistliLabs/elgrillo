@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ Underground | EL GRILLO | Selector de Garage, Punk y Escena Underground</title>
+    <meta name="description" content="DJ EL GRILLO - Selector de música Garage, Punk y Underground. Reserva para eventos y festivales.">
+    <!-- Carga diferida de estilos no críticos -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos críticos primero para el render inicial */
+        body {
+            background-color: #0c0c0c;
+            color: #f0f0f0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+        .navbar {
+            background-color: #000 !important;
+        }
+        .hero-section {
+            background-color: #111;
+            padding: 120px 0;
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+        .hero-text {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1;
+        }
+        /* Resto de estilos */
+        .section-title {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-left: 5px solid #ff3300;
+            padding-left: 15px;
+            margin-bottom: 30px;
+        }
+        .event-card {
+            background-color: #222;
+            border: none;
+            border-left: 3px solid #ff3300;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 51, 0, 0.2);
+        }
+        .music-style {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            height: 100%;
+        }
+        .music-style:hover {
+            background-color: #444;
+            transform: scale(1.03);
+        }
+        .social-icon {
+            font-size: 24px;
+            margin: 0 10px;
+            color: #f0f0f0;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .social-icon:hover {
+            color: #ff3300;
+            transform: translateY(-3px);
+        }
+        .custom-btn {
+            background-color: #ff3300;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 25px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: #fff;
+        }
+        .custom-btn:hover {
+            background-color: #cc2900;
+            transform: translateY(-2px);
+            color: #fff;
+        }
+        .footer {
+            background-color: #0a0a0a;
+            padding: 50px 0;
+        }
+        .img-fluid {
+            transition: opacity 0.3s ease;
+        }
+        .img-fluid:hover {
+            opacity: 0.8;
+        }
+        .contact-form {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 5px;
+        }
+        .form-control {
+            background-color: #333;
+            border: none;
+            color: #f0f0f0;
+        }
+        .form-control:focus {
+            background-color: #444;
+            color: #f0f0f0;
+            box-shadow: none;
+        }
+        .playlist-container {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .playlist-item {
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            transition: background-color 0.3s ease;
+        }
+        .playlist-item:hover {
+            background-color: #333;
+        }
+        .animate-text {
+            animation: color-change 5s infinite;
+        }
+        @keyframes color-change {
+            0% { color: #ff3300; }
+            50% { color: #f0f0f0; }
+            100% { color: #ff3300; }
+        }
+        .music-style-icon {
+            font-size: 2.5rem;
+            color: #ff3300;
+            margin-bottom: 15px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .gallery-item img {
+            transition: transform 0.5s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .logo-text {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        .vinyl-icon {
+            animation: spin 10s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Mejora de accesibilidad - foco visible */
+        a:focus, button:focus, input:focus, textarea:focus {
+            outline: 2px solid #ff3300;
+            outline-offset: 2px;
+        }
+        /* Optimización para dispositivos móviles */
+        @media (max-width: 767px) {
+            .hero-section {
+                padding: 80px 0;
+                height: auto;
+                min-height: 450px;
+            }
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand logo-text" href="#" aria-label="EL GRILLO logo">
+                <i class="fas fa-record-vinyl me-2 vinyl-icon" aria-hidden="true"></i>EL GRILLO
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home"><i class="fas fa-home me-1" aria-hidden="true"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about"><i class="fas fa-user me-1" aria-hidden="true"></i> Sobre Mí</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#music"><i class="fas fa-music me-1" aria-hidden="true"></i> Música</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#events"><i class="fas fa-calendar-alt me-1" aria-hidden="true"></i> Eventos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gallery"><i class="fas fa-images me-1" aria-hidden="true"></i> Galería</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact"><i class="fas fa-envelope me-1" aria-hidden="true"></i> Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <img src="./assets/images/4.jpg" alt="DJ en acción" class="img-fluid w-100 h-100 position-absolute top-0 start-0" style="object-fit: cover;" loading="eager">
+        <div class="container hero-text text-center">
+            <h1 class="display-3 fw-bold mb-4 animate-text">EL GRILLO</h1>
+            <p class="lead mb-4">Selector de Garage, Punk y lo que se atraviese</p>
+            <div class="d-flex justify-content-center">
+                <a href="#events" class="btn custom-btn me-3"><i class="fas fa-calendar-alt me-2" aria-hidden="true"></i>Próximos Eventos</a>
+                <a href="#contact" class="btn btn-outline-light"><i class="fas fa-envelope me-2" aria-hidden="true"></i>Contáctame</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-5 mb-4 mb-md-0">
+                    <img src="/api/placeholder/600/800" alt="DJ El Grillo Portrait" class="img-fluid rounded" loading="lazy">
+                </div>
+                <div class="col-md-7">
+                    <h2 class="section-title">Sobre Mí</h2>
+                    <p class="lead mb-4">Soy un DJ apasionado por los sonidos crudos y energéticos del garage, punk y la escena underground.</p>
+                    <p class="mb-4">Con más de una década en la escena, he llevado mi selección musical a través de clubes, festivales y eventos underground en todo el país. Mi misión es mantener viva la esencia rebelde y auténtica de estos géneros, combinando clásicos atemporales con joyas ocultas y nuevos sonidos que mantienen la llama encendida.</p>
+                    <p>Mi estilo se caracteriza por transiciones enérgicas y sets que cuentan una historia, llevando a la audiencia en un viaje a través de las raíces y evolución de la música alternativa independiente.</p>
+                    <div class="mt-4">
+                        <a href="#contact" class="btn custom-btn"><i class="far fa-calendar-check me-2" aria-hidden="true"></i>Reserva una fecha</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Styles Section -->
+    <!-- Music Styles Section -->
+    <section id="music" class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Mi Selección Musical</h2>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="music-style text-center">
+                        <i class="fas fa-guitar music-style-icon" aria-hidden="true"></i>
+                        <h4>Garage Rock</h4>
+                        <p>Desde los pioneros de los 60s hasta el revival de los 2000, pasando por clásicos ocultos y rarezas de todo el mundo.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="music-style text-center">
+                        <i class="fas fa-bolt music-style-icon" aria-hidden="true"></i>
+                        <h4>Garage Punk</h4>
+                        <p>La fusión perfecta entre la crudeza del garage y la energía del punk, con ritmos frenéticos y distorsión salvaje.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="music-style text-center">
+                        <i class="fas fa-skull music-style-icon" aria-hidden="true"></i>
+                        <h4>Punk Rock</h4>
+                        <p>Desde el punk clásico de los 70s hasta el hardcore, post-punk y todas las vertientes que mantienen vivo el espíritu rebelde.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="music-style text-center">
+                        <i class="fas fa-meteor music-style-icon" aria-hidden="true"></i>
+                        <h4>Escena Underground</h4>
+                        <p>Lo mejor de las escenas locales e internacionales: desde post-punk y darkwave hasta noise rock y rock psicodélico.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-12">
+                    <div class="playlist-container">
+                        <h3 class="mb-4"><i class="fas fa-headphones-alt me-2" aria-hidden="true"></i>Mi Último Set</h3>
+                        <div class="playlist-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">The Sonics - The Witch</h5>
+                                <small>Garage Rock Clásico</small>
+                            </div>
+                            <button class="btn btn-sm" aria-label="Play The Witch"><i class="fas fa-play"></i></button>
+                        </div>
+                        <div class="playlist-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">The Gories - Nitroglycerine</h5>
+                                <small>Garage Punk</small>
+                            </div>
+                            <button class="btn btn-sm" aria-label="Play Nitroglycerine"><i class="fas fa-play"></i></button>
+                        </div>
+                        <div class="playlist-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">Dead Kennedys - California Über Alles</h5>
+                                <small>Punk Rock</small>
+                            </div>
+                            <button class="btn btn-sm" aria-label="Play California Über Alles"><i class="fas fa-play"></i></button>
+                        </div>
+                        <div class="playlist-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">Thee Oh Sees - The Dream</h5>
+                                <small>Garage Psych</small>
+                            </div>
+                            <button class="btn btn-sm" aria-label="Play The Dream"><i class="fas fa-play"></i></button>
+                        </div>
+                        <div class="playlist-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-0">IDLES - Mother</h5>
+                                <small>Post-Punk</small>
+                            </div>
+                            <button class="btn btn-sm" aria-label="Play Mother"><i class="fas fa-play"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Próximos Eventos</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card event-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/api/placeholder/300/400" alt="Evento Noche de Garage Punk" class="img-fluid rounded-start h-100" style="object-fit: cover;" loading="lazy">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-music me-2" aria-hidden="true"></i>Noche de Garage Punk</h5>
+                                    <p class="card-text"><small class="text-muted"><i class="far fa-calendar-alt me-2" aria-hidden="true"></i>15 de Abril, 2025 - 22:00 hrs</small></p>
+                                    <p class="card-text"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Club Underground</p>
+                                    <p class="card-text">Una noche dedicada a los sonidos más crudos del garage punk con selecciones que harán temblar las paredes.</p>
+                                    <a href="#" class="btn custom-btn btn-sm"><i class="fas fa-info-circle me-1" aria-hidden="true"></i>Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card event-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/api/placeholder/300/400" alt="Festival Punk Primavera" class="img-fluid rounded-start h-100" style="object-fit: cover;" loading="lazy">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-flag me-2" aria-hidden="true"></i>Festival Punk Primavera</h5>
+                                    <p class="card-text"><small class="text-muted"><i class="far fa-calendar-alt me-2" aria-hidden="true"></i>22 de Abril, 2025 - 18:00 hrs</small></p>
+                                    <p class="card-text"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Parque Cultural Independiente</p>
+                                    <p class="card-text">Set especial de cierre para el festival anual de música punk de la ciudad.</p>
+                                    <a href="#" class="btn custom-btn btn-sm"><i class="fas fa-info-circle me-1" aria-hidden="true"></i>Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card event-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/api/placeholder/300/400" alt="Sesión de Vinilos Under" class="img-fluid rounded-start h-100" style="object-fit: cover;" loading="lazy">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-record-vinyl me-2" aria-hidden="true"></i>Sesión de Vinilos Under</h5>
+                                    <p class="card-text"><small class="text-muted"><i class="far fa-calendar-alt me-2" aria-hidden="true"></i>30 de Abril, 2025 - 20:00 hrs</small></p>
+                                    <p class="card-text"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Disquería Independiente</p>
+                                    <p class="card-text">Sesión especial con vinilos raros y limitados de la escena underground internacional.</p>
+                                    <a href="#" class="btn custom-btn btn-sm"><i class="fas fa-info-circle me-1" aria-hidden="true"></i>Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card event-card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="/api/placeholder/300/400" alt="Noche Garage 60s" class="img-fluid rounded-start h-100" style="object-fit: cover;" loading="lazy">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-compact-disc me-2" aria-hidden="true"></i>Noche Garage 60s</h5>
+                                    <p class="card-text"><small class="text-muted"><i class="far fa-calendar-alt me-2" aria-hidden="true"></i>5 de Mayo, 2025 - 21:30 hrs</small></p>
+                                    <p class="card-text"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Bar Vintage</p>
+                                    <p class="card-text">Un viaje a los orígenes del garage rock con clásicos de los 60s y rarezas inolvidables.</p>
+                                    <a href="#" class="btn custom-btn btn-sm"><i class="fas fa-info-circle me-1" aria-hidden="true"></i>Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Galería</h2>
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="DJ Session 1" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="DJ Session 2" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="Club Night" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="Festival Performance" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="Vinyl Collection" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="Underground Scene" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="Punk Festival" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="gallery-item">
+                        <img src="/api/placeholder/400/400" alt="DJ Booth" class="img-fluid rounded" loading="lazy">
+                        <div class="gallery-overlay rounded">
+                            <i class="fas fa-search-plus fa-2x text-white" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Contacto</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <div class="mb-3">
+                                <label for="name" class="form-label"><i class="fas fa-user me-2" aria-hidden="true"></i>Nombre</label>
+                                <input type="text" class="form-control" id="name" required aria-describedby="nameHelp">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label"><i class="fas fa-envelope me-2" aria-hidden="true"></i>Email</label>
+                                <input type="email" class="form-control" id="email" required aria-describedby="emailHelp">
+                            </div>
+                            <div class="mb-3">
+                                <label for="subject" class="form-label"><i class="fas fa-tag me-2" aria-hidden="true"></i>Asunto</label>
+                                <input type="text" class="form-control" id="subject" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label"><i class="fas fa-comment me-2" aria-hidden="true"></i>Mensaje</label>
+                                <textarea class="form-control" id="message" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn custom-btn w-100"><i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Enviar Mensaje</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ps-lg-4">
+                        <h4 class="mb-4"><i class="fas fa-info-circle me-2" aria-hidden="true"></i>Información</h4>
+                        <p>¿Buscas la energía cruda del garage punk para tu evento? ¡Estoy listo para hacer temblar las paredes!</p>
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-map-marker-alt me-3 mt-1" aria-hidden="true"></i>
+                            <div>
+                                <h5 class="mb-1">Ubicación</h5>
+                                <p>Ciudad de México, México</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-envelope me-3 mt-1" aria-hidden="true"></i>
+                            <div>
+                                <h5 class="mb-1">Email</h5>
+                                <p>contacto@elgrillo.mx</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <i class="fas fa-phone me-3 mt-1" aria-hidden="true"></i>
+                            <div>
+                                <h5 class="mb-1">Teléfono</h5>
+                                <p>+52 (55) 1234-5678</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <i class="fas fa-clock me-3 mt-1" aria-hidden="true"></i>
+                            <div>
+                                <h5 class="mb-1">Disponibilidad</h5>
+                                <p>Reservaciones con al menos 2 semanas de anticipación</p>
+                            </div>
+                        </div>
+                        <h4 class="mb-3"><i class="fas fa-hashtag me-2" aria-hidden="true"></i>Sígueme</h4>
+                        <div class="social-links">
+                            <a href="https://instagram.com" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                            <a href="https://facebook.com" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                            <a href="https://twitter.com" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                            <a href="https://soundcloud.com" class="social-icon" aria-label="SoundCloud"><i class="fab fa-soundcloud" aria-hidden="true"></i></a>
+                            <a href="https://mixcloud.com" class="social-icon" aria-label="Mixcloud"><i class="fab fa-mixcloud" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5 bg-dark">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Testimonios</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="music-style">
+                        <div class="mb-3 text-center">
+                            <i class="fas fa-quote-left fa-2x text-muted" aria-hidden="true"></i>
+                        </div>
+                        <p class="mb-4">La selección musical de El Grillo transformó nuestra fiesta en algo inolvidable. Su conocimiento de la escena underground y capacidad para leer a la audiencia es impresionante.</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="ps-3 text-center">
+                                <h5 class="mb-0">Club Subterráneo</h5>
+                                <small class="text-muted">Venue de la CDMX</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="music-style">
+                        <div class="mb-3 text-center">
+                            <i class="fas fa-quote-left fa-2x text-muted" aria-hidden="true"></i>
+                        </div>
+                        <p class="mb-4">El mejor DJ para eventos punk que he experimentado. Tiene un talento único para mezclar clásicos con joyas ocultas que nunca has escuchado pero necesitabas en tu vida.</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="ps-3 text-center">
+                                <h5 class="mb-0">Festival Rebelde</h5>
+                                <small class="text-muted">Organizadores</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="music-style">
+                        <div class="mb-3 text-center">
+                            <i class="fas fa-quote-left fa-2x text-muted" aria-hidden="true"></i>
+                        </div>
+                        <p class="mb-4">El Grillo no solo es técnicamente excelente, sino que tiene esa rara capacidad de conectar profundamente con la audiencia a través de su pasión por la música underground.</p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="ps-3 text-center">
+                                <h5 class="mb-0">Revista Subcultura</h5>
+                                <small class="text-muted">Publicación independiente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title text-center mb-4">No Te Pierdas Ningún Set</h2>
+                    <p class="lead mb-4">Suscríbete para recibir información sobre próximos eventos, playlists exclusivas y más.</p>
+                    <form class="d-flex justify-content-center">
+                        <div class="input-group mb-3 w-75">
+                            <input type="email" class="form-control" placeholder="Tu email" aria-label="Email address" aria-describedby="button-addon2" required>
+                            <button class="btn custom-btn" type="submit" id="button-addon2"><i class="fas fa-paper-plane me-2" aria-hidden="true"></i>Suscribirse</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-4 fw-bold border-start border-danger ps-2">EL GRILLO</h5>
+                    <p>Selector musical especializado en Garage, Punk y la mejor música Underground. Llevando la energía cruda de la música alternativa a eventos y festivales desde 2010.</p>
+                    <div class="mt-4">
+                        <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+                        <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+                        <a href="#" class="social-icon" aria-label="SoundCloud"><i class="fab fa-soundcloud" aria-hidden="true"></i></a>
+                        <a href="#" class="social-icon" aria-label="Mixcloud"><i class="fab fa-mixcloud" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-4 fw-bold border-start border-danger ps-2">Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#home" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Inicio</a></li>
+                        <li class="mb-2"><a href="#about" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Sobre Mí</a></li>
+                        <li class="mb-2"><a href="#music" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Música</a></li>
+                        <li class="mb-2"><a href="#events" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Eventos</a></li>
+                        <li class="mb-2"><a href="#gallery" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Galería</a></li>
+                        <li class="mb-2"><a href="#contact" class="text-decoration-none text-white"><i class="fas fa-chevron-right me-2" aria-hidden="true"></i>Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="text-uppercase mb-4 fw-bold border-start border-danger ps-2">Contáctame</h5>
+                    <p class="mb-2"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Ciudad de México, México</p>
+                    <p class="mb-2"><i class="fas fa-envelope me-2" aria-hidden="true"></i>contacto@elgrillo.mx</p>
+                    <p class="mb-2"><i class="fas fa-phone me-2" aria-hidden="true"></i>+52 (55) 1234-5678</p>
+                    <p class="mb-2"><i class="fas fa-clock me-2" aria-hidden="true"></i>Siempre disponible para el underground</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-8">
+                    <p class="mb-md-0">&copy; 2025 EL GRILLO. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="mb-0">Diseñado con <i class="fas fa-heart text-danger" aria-hidden="true"></i> para la escena underground</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top button -->
+    <button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- Modal para Galería -->
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Imagen ampliada" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts (carga diferida) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js" defer></script>
+    <script>
+        // Esperar a que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Botón de volver arriba
+            const btnBackToTop = document.getElementById('btn-back-to-top');
+            
+            if (btnBackToTop) {
+                // Cuando el usuario se desplaza 20px desde la parte superior del documento, muestra el botón
+                window.onscroll = function() {
+                    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                        btnBackToTop.style.display = "block";
+                        btnBackToTop.style.position = "fixed";
+                        btnBackToTop.style.bottom = "20px";
+                        btnBackToTop.style.right = "20px";
+                        btnBackToTop.style.zIndex = "99";
+                    } else {
+                        btnBackToTop.style.display = "none";
+                    }
+                };
+                
+                // Cuando el usuario hace clic en el botón, desplazar hasta la parte superior del documento
+                btnBackToTop.addEventListener('click', function() {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                });
+            }
+            
+            // Desplazamiento suave para los enlaces de navegación
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Si el navbar está expandido en móvil, ciérralo
+                        const navbarCollapse = document.querySelector('.navbar-collapse');
+                        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            navbarCollapse.classList.remove('show');
+                        }
+                    }
+                });
+            });
+            
+            // Funcionalidad para la galería
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const modalImage = document.getElementById('modalImage');
+            const galleryModal = new bootstrap.Modal(document.getElementById('galleryModal'));
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const imgSrc = this.querySelector('img').getAttribute('src');
+                    const imgAlt = this.querySelector('img').getAttribute('alt');
+                    
+                    if (modalImage) {
+                        modalImage.setAttribute('src', imgSrc);
+                        modalImage.setAttribute('alt', imgAlt);
+                        galleryModal.show();
+                    }
+                });
+            });
+            
+            // Formulario de contacto
+            const contactForm = document.getElementById('contactForm');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Aquí iría el código para enviar el formulario, por ahora solo mostraremos una alerta
+                    alert('¡Gracias por tu mensaje! Te responderé lo antes posible.');
+                    contactForm.reset();
+                });
+            }
+            
+            // Animación para elementos cuando entran en el viewport
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-element');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            // Agregar la clase a los elementos que queremos animar
+            document.querySelectorAll('.section-title, .music-style, .event-card, .gallery-item').forEach(el => {
+                observer.observe(el);
+            });
+        });
+        
+        // Animación CSS para elementos
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .fade-in-element {
+                animation: fadeIn 0.6s ease-out forwards;
+            }
+            
+            #btn-back-to-top {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 99;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                text-align: center;
+                padding: 0;
+                background-color: #ff3300;
+                border: none;
+            }
+            
+            #btn-back-to-top:hover {
+                background-color: #cc2900;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

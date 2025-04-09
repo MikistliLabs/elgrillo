@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Invasiones - Los Intrusos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Montserrat:wght@400;700&display=swap');
+
+        :root {
+            --rosa-neon: #FF1493;
+            --verde-lima: #ADFF2F;
+            --amarillo: #FFFF00;
+            --rojo: #FF0000;
+            --negro: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--negro);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.2;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 150px;
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); filter: drop-shadow(0 0 0px var(--rosa-neon)); }
+            to { transform: scale(1.05); filter: drop-shadow(0 0 15px var(--rosa-neon)); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            color: var(--verde-lima);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        nav a:hover {
+            color: var(--amarillo);
+            border-color: var(--rosa-neon);
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 20, 147, 0.2);
+            transition: all 0.3s;
+            z-index: -1;
+        }
+
+        nav a:hover::before {
+            left: 0;
+        }
+
+        .calendar-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--verde-lima);
+            padding: 20px;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--rosa-neon);
+        }
+
+        .calendar-header h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 2.5rem;
+        }
+
+        .calendar-controls button {
+            background-color: transparent;
+            color: var(--verde-lima);
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 5px 10px;
+        }
+
+        .calendar-controls button:hover {
+            color: var(--rosa-neon);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .calendar-day {
+            padding: 10px;
+            border: 1px solid #333;
+            transition: all 0.3s;
+        }
+
+        .calendar-day.has-event {
+            background-color: var(--rosa-neon);
+            color: black;
+            cursor: pointer;
+        }
+
+        .calendar-day.has-event:hover {
+            background-color: var(--amarillo);
+        }
+
+        .calendar-week-header {
+            color: var(--amarillo);
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid #555;
+        }
+
+        .event-list-container {
+            margin-top: 30px;
+            border-top: 2px solid var(--verde-lima);
+            padding-top: 20px;
+        }
+
+        .event-list-container h3 {
+            color: var(--rosa-neon);
+            font-family: 'Creepster', cursive;
+            margin-bottom: 15px;
+        }
+
+        .event-item {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--amarillo);
+        }
+
+        .event-item strong {
+            color: var(--verde-lima);
+        }
+
+        /* Estilos para el selector de vista */
+        .view-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .view-selector button {
+            background-color: #333;
+            color: var(--verde-lima);
+            border: 1px solid var(--verde-lima);
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-selector button.active {
+            background-color: var(--verde-lima);
+            color: black;
+        }
+
+        .view-selector button:hover {
+            background-color: var(--rosa-neon);
+            color: white;
+            border-color: var(--rosa-neon);
+        }
+
+        /* Estilos adicionales para la vista de semana */
+        #weekView {
+            display: none;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .week-day-container {
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .week-day-container.has-event {
+            background-color: var(--rosa-neon);
+            color: black;
+            cursor: pointer;
+        }
+
+        .week-day-container.has-event:hover {
+            background-color: var(--amarillo);
+        }
+
+        #dayView {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #111;
+            padding: 50px 0;
+            text-align: center;
+            border-top: 5px solid var(--rosa-neon);
+            margin-top: 50px; /* Add some space above the footer */
+        }
+
+        .footer-logo {
+            width: 100px;
+            margin-bottom: 30px;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <header>
+        <a href="intrusos_2.html"><img src="https://via.placeholder.com/150/150" alt="Los Intrusos Logo" class="logo" /></a>
+        <nav>
+            <ul>
+                <li><a href="intrusos_2.html#bio"><i class="fas fa-users"></i> Bio</a></li>
+                <li><a href="intrusos_2.html#dates"><i class="fas fa-calendar-alt"></i> Próximas Fechas</a></li>
+                <li><a href="intrusos_2.html#music"><i class="fas fa-music"></i> Música</a></li>
+                <li><a href="intrusos_2.html#contact"><i class="fas fa-envelope"></i> Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <button id="prevMonth">&lt;</button>
+            <h2 id="currentMonth"></h2>
+            <button id="nextMonth">&gt;</button>
+        </div>
+
+        <div class="view-selector">
+            <button id="viewMonth" class="active">Mes</button>
+            <button id="viewWeek">Semana</button>
+            <button id="viewDay">Día</button>
+        </div>
+
+        <div id="monthView">
+            <div class="calendar-grid week-header">
+                <div class="calendar-week-header">Dom</div>
+                <div class="calendar-week-header">Lun</div>
+                <div class="calendar-week-header">Mar</div>
+                <div class="calendar-week-header">Mié</div>
+                <div class="calendar-week-header">Jue</div>
+                <div class="calendar-week-header">Vie</div>
+                <div class="calendar-week-header">Sáb</div>
+            </div>
+            <div id="calendarDays" class="calendar-grid">
+                </div>
+        </div>
+
+        <div id="weekView" style="display: none;">
+            </div>
+
+        <div id="dayView" style="display: none;">
+            <h3 id="currentDayEvents">Eventos del Día</h3>
+            <div id="dailyEventsList">
+                </div>
+        </div>
+
+        <div class="event-list-container">
+            <h3>Todas las Fechas</h3>
+            <div id="allEventsList">
+                </div>
+        </div>
+    </div>
+
+    <footer>
+        <img src="https://via.placeholder.com/100/100" alt="Los Intrusos Logo Footer" class="footer-logo" />
+        <p class="copyright">&copy; 2025 Los Intrusos. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const calendarContainer = document.querySelector('.calendar-container');
+        const currentMonthElement = document.getElementById('currentMonth');
+        const prevMonthButton = document.getElementById('prevMonth');
+        const nextMonthButton = document.getElementById('nextMonth');
+        const calendarDaysElement = document.getElementById('calendarDays');
+        const allEventsListElement = document.getElementById('allEventsList');
+
+        const viewMonthButton = document.getElementById('viewMonth');
+        const viewWeekButton = document.getElementById('viewWeek');
+        const viewDayButton = document.getElementById('viewDay');
+        const monthViewElement = document.getElementById('monthView');
+        const weekViewElement = document.getElementById('weekView');
+        const dayViewElement = document.getElementById('dayView');
+        const currentDayEventsElement = document.getElementById('currentDayEvents');
+        const dailyEventsListElement = document.getElementById('dailyEventsList');
+
+        let currentDate = new Date();
+        let currentWeekStartDate;
+
+        let allEvents = [
+            {
+                date: new Date(2025, 3, 15),
+                title: 'Invasión en Garage Underground',
+                venue: 'Garage Underground',
+                country: 'México',
+                description: 'Noche de garage rock explosivo con bandas invitadas.',
+                flyer: 'url_del_flyer_1.jpg',
+                ticketsUrl: 'url_de_venta_tickets_1.com'
+            },
+            {
+                date: new Date(2025, 3, 22),
+                title: 'Noche de Ruido en El Sótano',
+                venue: 'El Sótano',
+                country: 'México',
+                description: 'Concierto íntimo con setlist especial.',
+                flyer: 'url_del_flyer_2.jpg',
+                ticketsUrl: null // O dejarlo vacío si no hay venta de tickets
+            },
+            // ... más eventos con la información adicional ...
+        ];
+
+        function getStartOfWeek(date) {
+            const dayOfWeek = date.getDay();
+            const diff = date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when day is Sunday
+            return new Date(date.setDate(diff));
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const daysInMonth = lastDayOfMonth.getDate();
+            const firstDayIndex = firstDayOfMonth.getDay();
+            const lastDayIndex = lastDayOfMonth.getDay();
+            const nextMonthDays = 7 - lastDayIndex - 1;
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+
+            currentMonthElement.textContent = new Intl.DateTimeFormat('es-MX', { month: 'long', year: 'numeric' }).format(currentDate);
+            calendarDaysElement.innerHTML = '';
+
+            for (let i = firstDayIndex; i > 0; i--) {
+                const prevMonthDay = prevMonthLastDay - i + 1;
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day', 'prev-month-day');
+                dayElement.textContent = prevMonthDay;
+                calendarDaysElement.appendChild(dayElement);
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = i;
+                const currentDateForEvent = new Date(year, month, i);
+
+                const eventOnDay = allEvents.filter(event =>
+                    event.date.getFullYear() === currentDateForEvent.getFullYear() &&
+                    event.date.getMonth() === currentDateForEvent.getMonth() &&
+                    event.date.getDate() === currentDateForEvent.getDate()
+                );
+
+                if (eventOnDay.length > 0) {
+                    dayElement.classList.add('has-event');
+                    dayElement.addEventListener('click', () => showDayEvents(currentDateForEvent));
+                }
+                calendarDaysElement.appendChild(dayElement);
+            }
+
+            for (let i = 1; i <= nextMonthDays; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day', 'next-month-day');
+                dayElement.textContent = i;
+                calendarDaysElement.appendChild(dayElement);
+            }
+        }
+
+        function renderAllEventsList() {
+            allEventsListElement.innerHTML = '';
+            allEvents.sort((a, b) => a.date - b.date);
+            allEvents.forEach(event => {
+                const eventItem = document.createElement('div');
+                eventItem.classList.add('event-item');
+                const formattedDate = new Intl.DateTimeFormat('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }).format(event.date);
+                eventItem.innerHTML = `<strong>${event.title}</strong> - ${formattedDate} en ${event.venue || 'Lugar por confirmar'}`;
+                allEventsListElement.appendChild(eventItem);
+            });
+        }
+
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        prevMonthButton.addEventListener('click', () => changeMonth(-1));
+        nextMonthButton.addEventListener('click', () => changeMonth(1));
+
+        // Week View
+        function renderWeekView(date) {
+            weekViewElement.innerHTML = '';
+            currentWeekStartDate = getStartOfWeek(new Date(date));
+
+            for (let i = 0; i < 7; i++) {
+                const currentDay = new Date(currentWeekStartDate);
+                currentDay.setDate(currentWeekStartDate.getDate() + i);
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('week-day-container');
+                const dayHeader = document.createElement('h4');
+                dayHeader.textContent = new Intl.DateTimeFormat('es-MX', { weekday: 'short', day: 'numeric' }).format(currentDay);
+                dayDiv.appendChild(dayHeader);
+
+                const eventsOnDay = allEvents.filter(event =>
+                    event.date.getFullYear() === currentDay.getFullYear() &&
+                    event.date.getMonth() === currentDay.getMonth() &&
+                    event.date.getDate() === currentDay.getDate()
+                );
+
+                if (eventsOnDay.length > 0) {
+                    dayDiv.classList.add('has-event');
+                    dayDiv.style.backgroundColor = 'var(--rosa-neon)';
+                    dayDiv.style.color = 'black';
+                    dayDiv.style.cursor = 'pointer';
+                    dayDiv.addEventListener('click', () => showDayEvents(currentDay));
+                } else {
+                    dayDiv.style.backgroundColor = '#333';
+                    dayDiv.style.color = 'white';
+                }
+                weekViewElement.appendChild(dayDiv);
+            }
+        }
+
+        function navigateWeek(direction) {
+            currentWeekStartDate.setDate(currentWeekStartDate.getDate() + (direction * 7));
+            renderWeekView(currentWeekStartDate);
+        }
+
+        // Day View
+        // Day View
+        function showDayEvents(date) {
+            dayViewElement.style.display = 'block';
+            monthViewElement.style.display = 'none';
+            weekViewElement.style.display = 'none';
+
+            currentDayEventsElement.textContent = `Eventos del ${new Intl.DateTimeFormat('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }).format(date)}`;
+            dailyEventsListElement.innerHTML = '';
+
+            const eventsOnDay = allEvents.filter(event =>
+                event.date.getFullYear() === date.getFullYear() &&
+                event.date.getMonth() === date.getMonth() &&
+                event.date.getDate() === date.getDate()
+            );
+
+            if (eventsOnDay.length > 0) {
+                eventsOnDay.forEach(event => {
+                    const eventItem = document.createElement('div');
+                    eventItem.classList.add('event-details'); // Changed class name for styling
+                    const formattedDate = new Intl.DateTimeFormat('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }).format(event.date);
+                    eventItem.innerHTML = `
+                        <h3>${event.title}</h3>
+                        <p><strong>Fecha:</strong> ${formattedDate}</p>
+                        <p><strong>Lugar:</strong> ${event.venue || 'Por confirmar'}</p>
+                        <p><strong>País:</strong> ${event.country || 'Por confirmar'}</p>
+                        ${event.description ? `<p><strong>Descripción:</strong> ${event.description}</p>` : ''}
+                        ${event.flyer ? `<div class="event-flyer"><img src="${event.flyer}" alt="Flyer del evento"></div>` : ''}
+                        ${event.ticketsUrl ? `<p><a href="${event.ticketsUrl}" class="ticket-button" target="_blank">Comprar Tickets</a></p>` : ''}
+                    `;
+                    dailyEventsListElement.appendChild(eventItem);
+                });
+            } else {
+                dailyEventsListElement.textContent = 'No hay eventos para este día.';
+            }
+        }
+
+        // View Selectors
+        viewMonthButton.addEventListener('click', () => {
+            monthViewElement.style.display = 'grid';
+            weekViewElement.style.display = 'none';
+            dayViewElement.style.display = 'none';
+            viewMonthButton.classList.add('active');
+            viewWeekButton.classList.remove('active');
+            viewDayButton.classList.remove('active');
+            renderCalendar();
+
+            // Agregar botones de navegación de semana si no existen y mostrar/ocultar los de mes
+            let prevWeekButtonElement = document.getElementById('prevWeek');
+            let nextWeekButtonElement = document.getElementById('nextWeek');
+
+            if (prevWeekButtonElement) {
+                prevWeekButtonElement.remove();
+                nextWeekButtonElement.remove();
+            }
+            prevMonthButton.style.display = 'inline-block';
+            nextMonthButton.style.display = 'inline-block';
+        });
+
+        viewWeekButton.addEventListener('click', () => {
+            weekViewElement.style.display = 'grid';
+            monthViewElement.style.display = 'none';
+            dayViewElement.style.display = 'none';
+            viewWeekButton.classList.add('active');
+            viewMonthButton.classList.remove('active');
+            viewDayButton.classList.remove('active');
+            renderWeekView(currentDate);
+
+            // Agregar botones de navegación de semana si no existen
+            if (!document.getElementById('prevWeek')) {
+                const calendarHeader = document.querySelector('.calendar-header');
+                const prevWeekButtonElement = document.createElement('button');
+                prevWeekButtonElement.id = 'prevWeek';
+                prevWeekButtonElement.textContent = '<';
+                prevWeekButtonElement.addEventListener('click', () => navigateWeek(-1));
+                calendarHeader.insertBefore(prevWeekButtonElement, currentMonthElement);
+
+                const nextWeekButtonElement = document.createElement('button');
+                nextWeekButtonElement.id = 'nextWeek';
+                nextWeekButtonElement.textContent = '>';
+                nextWeekButtonElement.addEventListener('click', () => navigateWeek(1));
+                calendarHeader.appendChild(nextWeekButtonElement);
+
+                // Ocultar los botones de mes
+                prevMonthButton.style.display = 'none';
+                nextMonthButton.style.display = 'none';
+            } else {
+                // Mostrar los botones de semana y ocultar los de mes si ya existen
+                document.getElementById('prevWeek').style.display = 'inline-block';
+                document.getElementById('nextWeek').style.display = 'inline-block';
+                prevMonthButton.style.display = 'none';
+                nextMonthButton.style.display = 'none';
+            }
+        });
+
+        viewDayButton.addEventListener('click', () => {
+            dayViewElement.style.display = 'block';
+            monthViewElement.style.display = 'none';
+            weekViewElement.style.display = 'none';
+            viewDayButton.classList.add('active');
+            viewMonthButton.classList.remove('active');
+            viewWeekButton.classList.remove('active');
+            showDayEvents(currentDate);
+
+            // Ocultar los botones de semana y mes
+            let prevWeekButtonElement = document.getElementById('prevWeek');
+            let nextWeekButtonElement = document.getElementById('nextWeek');
+
+            if (prevWeekButtonElement) {
+                prevWeekButtonElement.remove();
+                nextWeekButtonElement.remove();
+            }
+            prevMonthButton.style.display = 'none';
+            nextMonthButton.style.display = 'none';
+        });
+
+        // Initial render
+        renderCalendar();
+        renderAllEventsList();
+    </script>
+</body>
+</html>
+
