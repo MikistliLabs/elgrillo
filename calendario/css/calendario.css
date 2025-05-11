@@ -1,0 +1,59 @@
+/* Estilos principales del Calendario */
+.calendar-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #ADFF2F;
+}
+.calendar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.calendar-title {
+    font-family: 'Creepster', cursive;
+    font-size: 3rem;
+    color: #FF1493;
+    text-shadow: 0 0 10px #FF1493;
+    margin-bottom: 20px;
+}
+.calendar-description {
+    color: #ADFF2F;
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.event-details {
+    margin-top: 50px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #ADFF2F;
+}
+.event-title {
+    font-family: 'Creepster', cursive;
+    font-size: 2rem;
+    color: #FF1493;
+    margin-bottom: 15px;
+}
+.event-info {
+    color: #ADFF2F;
+    margin-bottom: 10px;
+}
+.event-description {
+    color: white;
+    line-height: 1.6;
+}
+.back-button {
+    display: inline-block;
+    background-color: transparent;
+    color: #ADFF2F;
+    border: 2px solid #ADFF2F;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: all 0.3s;
+}
+.back-button:hover {
+    background-color: #ADFF2F;
+    color: black;
+}
